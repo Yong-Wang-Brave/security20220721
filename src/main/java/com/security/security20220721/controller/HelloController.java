@@ -4,9 +4,9 @@ import com.security.security20220721.entity.UserInfo;
 import com.security.security20220721.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 public class HelloController {
@@ -29,4 +29,14 @@ public class HelloController {
     public String admin(){
         return "admin角色访问";
     }
+
+    @PostMapping("/add-user")
+    public int addUser(@RequestBody UserInfo userInfo){
+        return userInfoService.insertUser(userInfo);
+    }
+    @PutMapping("/updatePwd")
+    public int updatePwd(@RequestBody Map<String, String> map){
+        return userInfoService.updatePwd(map.get("oldPwd"), map.get("newPwd"));
+    }
+
 }

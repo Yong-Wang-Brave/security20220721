@@ -44,7 +44,9 @@ public class CustomUserDetailsService implements UserDetailsService {
         return new User(
                 userInfo.getUsername(),
              // 因为数据库是明文，所以这里需加密密码
-                passwordEncoder.encode(userInfo.getPassword()),
+               // passwordEncoder.encode(userInfo.getPassword()),
+                //存入的时候已经更新为密文
+               userInfo.getPassword(),
                 authorities
         );
     }
