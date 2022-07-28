@@ -4,7 +4,9 @@ package com.security.security20220721.controller;
 import com.security.security20220721.Common.ApplicationContextUtils;
 import com.security.security20220721.Common.Result;
 import com.security.security20220721.annotations.rest.AnonymousGetMapping;
+import com.security.security20220721.annotations.rest.AnonymousPostMapping;
 import com.security.security20220721.entity.JwtUserDto;
+import com.security.security20220721.entity.UserInfo;
 import com.security.security20220721.utils.SecurityProperties;
 import com.security.security20220721.config.TokenProvider;
 import io.swagger.annotations.Api;
@@ -17,6 +19,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,8 +39,8 @@ public class AuthorizationController {
     @Autowired
     private AuthenticationManager authenticationManager;
     @ApiOperation("登录授权")
-    @AnonymousGetMapping(value="/login")
-    public Result login(HttpServletRequest request, HttpServletResponse httpServletResponse) throws Exception{
+    @AnonymousPostMapping(value="/login")
+    public Result login(HttpServletRequest request, HttpServletResponse httpServletResponse, @RequestBody UserInfo userInfo) throws Exception{
 
         String activeProfile = ApplicationContextUtils.getActiveProfile();
         String loginUserName;
@@ -53,7 +56,8 @@ public class AuthorizationController {
             loginUserName=attribute.toString();
         }
 
-        UsernamePasswordAuthenticationToken authenticationToken =new UsernamePasswordAuthenticationToken("11","11");
+        UsernamePasswordAuthenticationToken authenticationToken =new UsernamePasswordAuthenticationToken(userInfo.getUsername(),
+                userInfo.getPassword());
 
         //重点：此处会执行UserDetailServiceImpl
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);

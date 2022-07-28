@@ -18,13 +18,13 @@ public class HelloController {
         return userInfoService.getUserInfo(username);
     }
 
-    @PreAuthorize("hasAnyRole('user')") // 只能user角色才能访问该方法
+    @PreAuthorize("hasRole('USER')") // 只能user角色才能访问该方法
     @GetMapping("/user")
     public String user(){
         return "user角色访问";
     }
 
-    @PreAuthorize("hasAnyRole('admin')") // 只能admin角色才能访问该方法
+    @PreAuthorize("hasRole('ADMIN')") // 只能admin角色才能访问该方法
     @GetMapping("/admin")
     public String admin(){
         return "admin角色访问";
@@ -34,6 +34,7 @@ public class HelloController {
     public int addUser(@RequestBody UserInfo userInfo){
         return userInfoService.insertUser(userInfo);
     }
+    //可以用谷歌浏览器修改秘密
     @PutMapping("/updatePwd")
     public int updatePwd(@RequestBody Map<String, String> map){
         return userInfoService.updatePwd(map.get("oldPwd"), map.get("newPwd"));

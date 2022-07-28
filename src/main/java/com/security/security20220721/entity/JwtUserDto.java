@@ -1,21 +1,24 @@
 package com.security.security20220721.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
 
 
-@Getter
+@Data
 @AllArgsConstructor
 public class JwtUserDto implements UserDetails {
-    private  final UserInfo user;
-
+    private   UserInfo user;
+    //角色权限
+    private  List<GrantedAuthority> authorities;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return authorities;
     }
 
     @Override

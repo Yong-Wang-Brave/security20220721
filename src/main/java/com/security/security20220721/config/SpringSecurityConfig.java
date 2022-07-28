@@ -1,6 +1,6 @@
 package com.security.security20220721.config;
 
-import com.security.security20220721.Common.UserDetailsServiceImpl;
+import com.security.security20220721.service.UserDetailsServiceImpl;
 import com.security.security20220721.RequestMethodEnum;
 import com.security.security20220721.annotations.AnonymousAccess;
 import com.security.security20220721.utils.JwtAccessDeniedHandler;
@@ -21,7 +21,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -47,12 +46,20 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 @Autowired
 UserDetailsServiceImpl userDetailsService;
 
+
+
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService);
     }
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        //密码加密方式
+        return  new BCryptPasswordEncoder();
+    }
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService);
+        auth.userDetailsService(userDetailsService)
+                .passwordEncoder(passwordEncoder());
     }
 
     @Override
@@ -66,11 +73,7 @@ UserDetailsServiceImpl userDetailsService;
          //去除role_前缀
          return new GrantedAuthorityDefaults("");
     }
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-         //密码加密方式
-         return  new BCryptPasswordEncoder();
-    }
+
 
      @Override
      protected void configure(HttpSecurity httpSecurity) throws Exception {
@@ -79,8 +82,9 @@ UserDetailsServiceImpl userDetailsService;
          Map<RequestMappingInfo, HandlerMethod> handlerMethodMap = requestMappingHandlerMapping.getHandlerMethods();
          Map<String, Set<String>> annoymousUrl = getAnnoymousUrl(handlerMethodMap);
          httpSecurity
+
                  //禁用CRSF
-                 .csrf().disable()
+                 .csrf().disable()// post请求要关闭csrf验证,不然访问报错；实际开发中开启，需要前端配合传递其他参数
                  .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
                  //授权异常
                  .exceptionHandling()
@@ -104,6 +108,7 @@ UserDetailsServiceImpl userDetailsService;
                          "/**/*.js",
                          "webSocket/**"
                  ).permitAll()
+                 .antMatchers(HttpMethod.POST, "/add-user").permitAll() // 允许post请求/add-user，而无需认证
                  //swagger文档
                  .antMatchers("/swagger-ui.html").permitAll()
                  .antMatchers("/swagger-resources/**").permitAll()
@@ -128,6 +133,10 @@ UserDetailsServiceImpl userDetailsService;
                  .antMatchers(HttpMethod.DELETE,annoymousUrl.get(RequestMethodEnum.DELETE.getType()).toArray(new String[0])).permitAll()
                  //所有类型的接口都放行
                  .antMatchers(annoymousUrl.get(RequestMethodEnum.ALL.getType()).toArray(new String[0])).permitAll()
+                 .and()
+                 .authorizeRequests()
+                 .antMatchers("/user").hasAnyRole("USER")
+                 .antMatchers("/admin").hasAnyRole("ADMIN")
                  //所有的请求都需要认证
                  .anyRequest().authenticated()
                  .and().apply(securityConfigurerAdapter());

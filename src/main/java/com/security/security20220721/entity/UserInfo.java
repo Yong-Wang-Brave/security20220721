@@ -1,6 +1,9 @@
 package com.security.security20220721.entity;
 
 import lombok.Data;
+import org.springframework.security.core.GrantedAuthority;
+
+import java.util.List;
 
 @Data
 public class UserInfo {
@@ -9,4 +12,5 @@ public class UserInfo {
     private String password;
     private String role;
     private Boolean enabled;
+
 }
