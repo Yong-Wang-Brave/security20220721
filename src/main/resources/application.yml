@@ -10,3 +10,26 @@ logging:
       security:
         security20220721:
           mapper: debug  # ??sql??
+login:
+  cache-enable: true
+  single-login: true
+  login-code:
+    code-type: arithmetic
+    expiration: 2
+    width: 111
+    height: 36
+    length: 2
+    font-size: 25
+jwt:
+  header: Authorization
+  token-start-with: Bearer
+  #base64-secret: ZmQ0ZGI5NjQ0MDQwY2I4MjMxY2Y3ZmI3MjdhN2ZmMjNhODViOTg1ZGE0NTBjMGM4NDA5NzYxMjdjOWMwYWRmZTBlZjlhNGY3ZTg4Y2U3YTE1ODVKZDU5Y2Y3OGYwZWE1NzUzNWQ2YjFJZDc0NGMxZWU2MmQ3MjY1NzJmNTE0MzI=
+  base64-secret: ZmQ0ZGI5NjQ0MDQwY2I4MjMxY2Y3ZmI3MjdhN2ZmMjNhODViOTg1ZGE0NTBjMGM4NDA5NzYxMjdjOWMwYWRmZTBlZjlhNGY3ZTg4Y2U3YTE1ODVkZDU5Y2Y3OGYwZWE1NzUzNWQ2YjFJZDc0NGMxZWU2MmQ3MjY1NzJmNTE0MzI=
+  token-validity-in-seconds: 1440000
+  online-key: online-token-
+  code-key: code-key-
+  detect: 1800000
+  renew: 3600000
+store:
+  pacasLoginUrl: https://baodu.com
+
