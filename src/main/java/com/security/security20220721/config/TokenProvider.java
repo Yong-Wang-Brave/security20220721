@@ -15,6 +15,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
@@ -23,7 +24,8 @@ import java.util.*;
 
 @Slf4j
 @Component
-public class TokenProvider implements InitializingBean {
+//public class TokenProvider implements InitializingBean {
+public class TokenProvider{
     private SecurityProperties properties;
     public static final String AUTHORITIES_KEY = "user";
     public static final String AUTHORITIES_ROLE = "role";
@@ -34,17 +36,24 @@ public class TokenProvider implements InitializingBean {
         this.properties = properties;
     }
 
-
-
+    //benn初始化操作的方式一   @PostConstruct
+@PostConstruct
+public void Init(){
+    byte[] keyBytes = Decoders.BASE64.decode(properties.getBase64Secret());
+    Key key = Keys.hmacShaKeyFor(keyBytes);
+    jwtParser = Jwts.parserBuilder().setSigningKey(key).build();
+    jwtBuilder = Jwts.builder().signWith(key, SignatureAlgorithm.HS512);
+}
+    //benn初始化操作的方式二     implements InitializingBean 重写 afterPropertiesSet方法
     //先把令牌加载进去方便后面使用。
-    @Override
+ /*   @Override
     public void afterPropertiesSet() throws Exception {
         byte[] keyBytes = Decoders.BASE64.decode(properties.getBase64Secret());
         Key key = Keys.hmacShaKeyFor(keyBytes);
         jwtParser = Jwts.parserBuilder().setSigningKey(key).build();
         jwtBuilder = Jwts.builder().signWith(key, SignatureAlgorithm.HS512);
 
-    }
+    }*/
 
 
    public Authentication getAuthentication(String token) {
