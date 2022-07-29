@@ -12,5 +12,7 @@ public class UserInfo {
     private String password;
     private String role;
     private Boolean enabled;
+    private String oldPwd;
+    private String newPwd;
 
 }

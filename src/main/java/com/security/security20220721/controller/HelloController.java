@@ -35,9 +35,9 @@ public class HelloController {
         return userInfoService.insertUser(userInfo);
     }
     //可以用谷歌浏览器修改秘密
-    @PutMapping("/updatePwd")
-    public int updatePwd(@RequestBody Map<String, String> map){
-        return userInfoService.updatePwd(map.get("oldPwd"), map.get("newPwd"));
+    @PostMapping("/updatePwd")
+    public int updatePwd(@RequestBody UserInfo userInfo){
+        return userInfoService.updatePwd(userInfo.getOldPwd(), userInfo.getNewPwd());
     }
 
 }

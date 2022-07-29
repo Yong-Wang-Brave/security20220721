@@ -60,6 +60,7 @@ public class AuthorizationController {
                 userInfo.getPassword());
 
         //重点：此处会执行UserDetailServiceImpl
+        request.setAttribute("pwd",userInfo.getPassword());
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authenticate);
         //生成令牌
