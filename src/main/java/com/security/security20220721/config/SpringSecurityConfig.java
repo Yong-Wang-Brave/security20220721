@@ -101,6 +101,7 @@ UserDetailsServiceImpl userDetailsService;
                  .sessionCreationPolicy(SessionCreationPolicy.NEVER)
                  .and()
                  .authorizeRequests()
+                 //是不需要认证的url
                  .antMatchers(
                          HttpMethod.GET,
                          "/*.html",

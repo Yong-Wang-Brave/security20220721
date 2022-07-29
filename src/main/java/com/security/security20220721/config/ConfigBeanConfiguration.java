@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+
+//把配置文件中的属性加载到bean里面
 public class ConfigBeanConfiguration {
 
    @Bean

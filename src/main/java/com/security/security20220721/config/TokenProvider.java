@@ -34,6 +34,9 @@ public class TokenProvider implements InitializingBean {
         this.properties = properties;
     }
 
+
+
+    //先把令牌加载进去方便后面使用。
     @Override
     public void afterPropertiesSet() throws Exception {
         byte[] keyBytes = Decoders.BASE64.decode(properties.getBase64Secret());
