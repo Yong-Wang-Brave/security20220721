@@ -18,13 +18,13 @@ public class HelloController {
         return userInfoService.getUserInfo(username);
     }
 
-    @PreAuthorize("hasRole('USER')") // 只能user角色才能访问该方法
+    @PreAuthorize("hasRole('user')") // 只能user角色才能访问该方法
     @GetMapping("/user")
     public String user(){
         return "user角色访问";
     }
 
-    @PreAuthorize("hasRole('ADMIN')") // 只能admin角色才能访问该方法
+    @PreAuthorize("hasRole('admin')") // 只能admin角色才能访问该方法
     @GetMapping("/admin")
     public String admin(){
         return "admin角色访问";

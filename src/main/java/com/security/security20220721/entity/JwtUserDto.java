@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.List;
@@ -13,12 +14,12 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class JwtUserDto implements UserDetails {
-    private   UserInfo user;
+    private final  UserInfo user;
     //角色权限
-    private  List<GrantedAuthority> authorities;
+    private final  List<GrantedAuthority> authorities;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+        return this.authorities;
     }
 
     @Override

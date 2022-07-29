@@ -12,6 +12,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     static Map<String, JwtUserDto> userDtoCache = new ConcurrentHashMap();
 
     @Override
-    public JwtUserDto loadUserByUsername(String username) {
+    public UserDetails loadUserByUsername(String username) {
         JwtUserDto jwtUserDto = null;
         UserInfo user;
         // 角色集合
@@ -53,6 +54,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 throw new UsernameNotFoundException("用户不存在");
             }
             user.setEnabled(Boolean.TRUE);
+
             // 得到用户角色
             String role = user.getRole();
 

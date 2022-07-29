@@ -1,5 +1,7 @@
 package com.security.security20220721.config;
 
+import com.google.common.collect.Maps;
+import com.security.security20220721.entity.JwtUserDto;
 import com.security.security20220721.utils.SecurityProperties;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -8,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
@@ -15,16 +19,14 @@ import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.security.Security;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
 
 @Slf4j
 @Component
 public class TokenProvider implements InitializingBean {
     private SecurityProperties properties;
     public static final String AUTHORITIES_KEY = "user";
+    public static final String AUTHORITIES_ROLE = "role";
     private JwtParser jwtParser;
     private JwtBuilder jwtBuilder;
 
@@ -44,12 +46,35 @@ public class TokenProvider implements InitializingBean {
 
    public Authentication getAuthentication(String token) {
         Claims claims = getClaims(token);
-        User principal = new User(claims.getSubject(), "******", new ArrayList<>());
-        return new UsernamePasswordAuthenticationToken(principal, token, new ArrayList<>());
+       Object roles = claims.get("role");
+      String  role = object2Map(roles);
+       // 角色集合
+       List<GrantedAuthority> authorities = new ArrayList<>();
+       // 角色必须以`ROLE_`开头，数据库中没有，则在这里加
+       authorities.add(new SimpleGrantedAuthority(role));
+       User principal = new User(claims.getSubject(), "******", authorities);
+        return new UsernamePasswordAuthenticationToken(principal, token, authorities);
 
 
     }
+    /**
+     * Object转换为Map<Integer, String>格式
+     *
+     * @param obj Excel的行数据
+     * @return List数据
+     */
+    private String object2Map(Object obj) {
+        Map<String, String> map = Maps.newHashMap();
+        List<LinkedHashMap<String,String>> result = new ArrayList<>();
+        if (obj instanceof ArrayList<?>) {
+            for (Object o : (List<?>) obj) {
+                result.add((LinkedHashMap) o);
+            }
+        }
+        String role=result.get(0).get("authority");
 
+        return role;
+    }
     public Claims getClaims(String token) {
         return jwtParser.parseClaimsJws(token).getBody();
     }
@@ -67,9 +92,13 @@ public class TokenProvider implements InitializingBean {
         Calendar instance = Calendar.getInstance();
         instance.setTime(new Date());
         instance.add(Calendar.SECOND,Integer.parseInt(properties.getTokenValidityInSeconds()+""));
-
-        return jwtBuilder.setId("")
+        HashMap hashMap = new HashMap();
+        JwtUserDto principal = (JwtUserDto)authentication.getPrincipal();
+        hashMap.put("role",principal.getAuthorities());
+        return jwtBuilder.setId("uuid")
                 .claim(AUTHORITIES_KEY,authentication.getName())
+                .claim(AUTHORITIES_ROLE, ((JwtUserDto) authentication.getPrincipal()).getAuthorities())
+                .setHeader(hashMap)
                 .setSubject(authentication.getName())
                 .setExpiration(instance.getTime())
                 .compact();

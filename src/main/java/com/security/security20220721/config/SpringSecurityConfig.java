@@ -68,11 +68,11 @@ UserDetailsServiceImpl userDetailsService;
         return super.authenticationManagerBean();
     }
 
-    @Bean
+/*    @Bean
      GrantedAuthorityDefaults grantedAuthorityDefaults(){
          //去除role_前缀
          return new GrantedAuthorityDefaults("");
-    }
+    }*/
 
 
      @Override
@@ -135,8 +135,8 @@ UserDetailsServiceImpl userDetailsService;
                  .antMatchers(annoymousUrl.get(RequestMethodEnum.ALL.getType()).toArray(new String[0])).permitAll()
                  .and()
                  .authorizeRequests()
-                 .antMatchers("/user").hasAnyRole("USER")
-                 .antMatchers("/admin").hasAnyRole("ADMIN")
+              /*   .antMatchers("/user").hasAnyRole("user")
+                 .antMatchers("/admin").hasAnyRole("admin")*/
                  //所有的请求都需要认证
                  .anyRequest().authenticated()
                  .and().apply(securityConfigurerAdapter());

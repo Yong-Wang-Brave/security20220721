@@ -39,8 +39,10 @@ public class UserInfoService {
         if (passwordEncoder.matches(oldPwd, userInfo.getPassword())) {
             // 不要忘记加密新密码
             return userInfoMapper.updatePwd(username, passwordEncoder.encode(newPwd));
+        }else{
+          throw  new RuntimeException("密码更新失败");
         }
-        return 0;
+
     }
 
 
