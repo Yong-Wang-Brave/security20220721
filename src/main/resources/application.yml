@@ -32,6 +32,9 @@ jwt:
   detect: 1800000
   renew: 3600000
 store:
-  pacasLoginUrl: https://baodu.com
-
+  pacasLoginUrl: https://baidu.com
+  logoutUrl: https://baidu.com
+store1:
+  pacasLoginUrl: https://baidu.com
+  logoutUrl: https://baidu.com
 

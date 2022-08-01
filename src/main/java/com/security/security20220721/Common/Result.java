@@ -42,4 +42,8 @@ public static <T> Result<T> sucess(String code,String msg,T data){
     public static <T> Result<T> failure(String ret,String msg){
         return new Result<>(ret,msg,null);
     }
+    public static <T> Result<T> failure(String ret,String msg,String url){
+        return new Result<>(ret,msg,null);
+    }
+
 }

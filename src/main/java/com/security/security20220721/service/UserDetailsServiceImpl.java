@@ -62,7 +62,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             HttpServletRequest pwd = ContextHolderUtils.getRequest();
             Object pwd1 = pwd.getAttribute("pwd");
             // 判断输入的旧密码是正确
-            if (!passwordEncoder.matches(String.valueOf(pwd1),user.getPassword())) {
+            if (pwd1!=null&&!passwordEncoder.matches(String.valueOf(pwd1),user.getPassword())) {
                 // 不要忘记加密新密码
                 throw  new RuntimeException("密码错误");
             }
