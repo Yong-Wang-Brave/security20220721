@@ -99,10 +99,11 @@ String token =tokenProvider.getToken(request);
 request.getSession().invalidate();
 //方式一
 String logoutUrl1 = storeProperties.getLogoutUrl();
-//方式二：
+//方式二： 见文件 ConfigBeanConfiguration
  String   logoutUrl2 = storeProperties1.getLogoutUrl();
  //方式三
     System.out.println(logoutUrl);
+    //方式四  读取工程任意一个文件
     httpServletResponse.sendRedirect(logoutUrl);
 return Result.sucess("退出成功");
 }
